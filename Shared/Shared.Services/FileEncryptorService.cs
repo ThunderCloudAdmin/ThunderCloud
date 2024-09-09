@@ -22,7 +22,7 @@ public class FileEncryptorService : IFileEncryptorService
     public EncryptedBundle GenerateEncryptedFile(byte[] dataToEncrypt)
     {
         //Generate 2fish key
-        var aesKey = twoFishEncryptionService.GenerateEncryptionKey();
+        var aesKey = TwoFishKey.GenerateEncryptionKey();
 
         //EncryptFileWith2FishKey
         var encryptedFile = twoFishEncryptionService.Encrypt(dataToEncrypt, aesKey);
