@@ -4,25 +4,19 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ThunderServer.API.Migrations
+namespace ThunderServer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingIdentityScheme : Migration
+    public partial class addIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Files");
-
-            migrationBuilder.DropTable(
-                name: "Folder");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -36,7 +30,7 @@ namespace ThunderServer.API.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -65,7 +59,7 @@ namespace ThunderServer.API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -86,7 +80,7 @@ namespace ThunderServer.API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -108,7 +102,7 @@ namespace ThunderServer.API.Migrations
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
                     ProviderKey = table.Column<string>(type: "text", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,8 +119,8 @@ namespace ThunderServer.API.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,7 +143,7 @@ namespace ThunderServer.API.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
@@ -161,61 +155,6 @@ namespace ThunderServer.API.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ThunderFolder",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    ParentFolderId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsRootFolder = table.Column<bool>(type: "boolean", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ThunderFolder", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ThunderFolder_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ThunderFile",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FileName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    FileType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    FileSize = table.Column<long>(type: "bigint", nullable: false),
-                    MimeType = table.Column<string>(type: "text", nullable: false),
-                    FilePath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EncryptedFileKey = table.Column<byte[]>(type: "bytea", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AccessPermissions = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Metadata = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Checksum = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    IsEncrypted = table.Column<bool>(type: "boolean", nullable: false),
-                    IsShared = table.Column<bool>(type: "boolean", nullable: false),
-                    FileStatus = table.Column<int>(type: "integer", nullable: false),
-                    ParentFolderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ThunderFile", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ThunderFile_ThunderFolder_ParentFolderId",
-                        column: x => x.ParentFolderId,
-                        principalTable: "ThunderFolder",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -256,16 +195,6 @@ namespace ThunderServer.API.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ThunderFile_ParentFolderId",
-                table: "ThunderFile",
-                column: "ParentFolderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ThunderFolder_UserId",
-                table: "ThunderFolder",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -287,66 +216,10 @@ namespace ThunderServer.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ThunderFile");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "ThunderFolder");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.CreateTable(
-                name: "Folder",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    ParentFolderId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Folder", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Files",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParentFolderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AccessPermissions = table.Column<string>(type: "text", nullable: false),
-                    Checksum = table.Column<string>(type: "text", nullable: false),
-                    FileName = table.Column<string>(type: "text", nullable: false),
-                    FilePath = table.Column<string>(type: "text", nullable: false),
-                    FileSize = table.Column<long>(type: "bigint", nullable: false),
-                    FileType = table.Column<string>(type: "text", nullable: false),
-                    IsEncrypted = table.Column<bool>(type: "boolean", nullable: false),
-                    IsShared = table.Column<bool>(type: "boolean", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Metadata = table.Column<string>(type: "text", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Version = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Files", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Files_Folder_ParentFolderId",
-                        column: x => x.ParentFolderId,
-                        principalTable: "Folder",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Files_ParentFolderId",
-                table: "Files",
-                column: "ParentFolderId");
         }
     }
 }

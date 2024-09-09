@@ -9,11 +9,11 @@ using ThunderServer.Infrastructure;
 
 #nullable disable
 
-namespace ThunderServer.API.Migrations
+namespace ThunderServer.Infrastructure.Migrations
 {
     [DbContext(typeof(ThunderServerContext))]
-    [Migration("20240907194210_CreatingIdentityScheme")]
-    partial class CreatingIdentityScheme
+    [Migration("20240909165207_addedBaseDomains")]
+    partial class addedBaseDomains
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,10 +25,11 @@ namespace ThunderServer.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -51,7 +52,7 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,9 +66,8 @@ namespace ThunderServer.API.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -76,7 +76,7 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,9 +90,8 @@ namespace ThunderServer.API.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -101,7 +100,7 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -112,9 +111,8 @@ namespace ThunderServer.API.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -123,13 +121,13 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -138,10 +136,10 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -157,36 +155,52 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Shared.Models.ThunderFolder", b =>
+            modelBuilder.Entity("Shared.Models.FileInDirectory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("FileInDirectoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsRootFolder")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ParentFolderId")
+                    b.Property<Guid>("DirectoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("FileInDirectoryId");
+
+                    b.HasIndex("DirectoryId");
+
+                    b.HasIndex("FileId");
+
+                    b.ToTable("FileInDirectory", (string)null);
+                });
+
+            modelBuilder.Entity("Shared.Models.Tag", b =>
+                {
+                    b.Property<Guid>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("TagId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ThunderFolder", (string)null);
+                    b.ToTable("Tag", (string)null);
                 });
 
-            modelBuilder.Entity("ThunderServer.Models.ThunderFile", b =>
+            modelBuilder.Entity("Shared.Models.ThunderFile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -265,10 +279,92 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("ThunderFile", (string)null);
                 });
 
+            modelBuilder.Entity("Shared.Models.ThunderFileShare", b =>
+                {
+                    b.Property<Guid>("FileShareId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("EncryptedFileKeyForRecipient")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Permission")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("SharedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("FileShareId");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("ThunderFileShare", (string)null);
+                });
+
+            modelBuilder.Entity("Shared.Models.ThunderFileTag", b =>
+                {
+                    b.Property<Guid>("FileTagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("FileTagId");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ThunderFileTag", (string)null);
+                });
+
+            modelBuilder.Entity("Shared.Models.ThunderFolder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsRootFolder")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ParentFolderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ThunderFolder");
+                });
+
             modelBuilder.Entity("ThunderServer.Models.ThunderUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
@@ -337,16 +433,16 @@ namespace ThunderServer.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("ThunderServer.Models.ThunderUser", null)
                         .WithMany()
@@ -355,7 +451,7 @@ namespace ThunderServer.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("ThunderServer.Models.ThunderUser", null)
                         .WithMany()
@@ -364,9 +460,9 @@ namespace ThunderServer.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -379,7 +475,7 @@ namespace ThunderServer.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("ThunderServer.Models.ThunderUser", null)
                         .WithMany()
@@ -388,16 +484,31 @@ namespace ThunderServer.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shared.Models.ThunderFolder", b =>
+            modelBuilder.Entity("Shared.Models.FileInDirectory", b =>
                 {
-                    b.HasOne("ThunderServer.Models.ThunderUser", "User")
+                    b.HasOne("Shared.Models.ThunderFolder", null)
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("DirectoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("Shared.Models.ThunderFile", null)
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("ThunderServer.Models.ThunderFile", b =>
+            modelBuilder.Entity("Shared.Models.Tag", b =>
+                {
+                    b.HasOne("ThunderServer.Models.ThunderUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Models.ThunderFile", b =>
                 {
                     b.HasOne("Shared.Models.ThunderFolder", "ParentFolder")
                         .WithMany("Files")
@@ -406,6 +517,42 @@ namespace ThunderServer.API.Migrations
                         .IsRequired();
 
                     b.Navigation("ParentFolder");
+                });
+
+            modelBuilder.Entity("Shared.Models.ThunderFileShare", b =>
+                {
+                    b.HasOne("Shared.Models.ThunderFile", null)
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ThunderServer.Models.ThunderUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ThunderServer.Models.ThunderUser", null)
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shared.Models.ThunderFileTag", b =>
+                {
+                    b.HasOne("Shared.Models.ThunderFile", null)
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shared.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Shared.Models.ThunderFolder", b =>

@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Models;
-using ThunderServer.Models;
 
 namespace ThunderServer.Infrastructure.Configurations;
 

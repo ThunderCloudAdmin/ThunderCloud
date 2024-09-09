@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Models;
-using ThunderServer.Models;
 
 namespace ThunderServer.Infrastructure.Configurations;
 
-public class FileTagConfiguration : IEntityTypeConfiguration<FileTag>
+public class ThunderFileTagConfiguration : IEntityTypeConfiguration<ThunderFileTag>
 {
-    public void Configure(EntityTypeBuilder<FileTag> builder)
+    public void Configure(EntityTypeBuilder<ThunderFileTag> builder)
     {
-        builder.ToTable(nameof(FileTag));
+        builder.ToTable(nameof(ThunderFileTag));
 
         builder.HasKey(ft => ft.FileTagId);
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ThunderServer.Infrastructure;
@@ -11,9 +12,11 @@ using ThunderServer.Infrastructure;
 namespace ThunderServer.Infrastructure.Migrations
 {
     [DbContext(typeof(ThunderServerContext))]
-    partial class ThunderServerContextModelSnapshot : ModelSnapshot
+    [Migration("20240909165140_addIdentity")]
+    partial class addIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,211 +155,6 @@ namespace ThunderServer.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Shared.Models.FileInDirectory", b =>
-                {
-                    b.Property<Guid>("FileInDirectoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DirectoryId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("FileInDirectoryId");
-
-                    b.HasIndex("DirectoryId");
-
-                    b.HasIndex("FileId");
-
-                    b.ToTable("FileInDirectory", (string)null);
-                });
-
-            modelBuilder.Entity("Shared.Models.Tag", b =>
-                {
-                    b.Property<Guid>("TagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("TagName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TagId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Tag", (string)null);
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AccessPermissions")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Checksum")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<byte[]>("EncryptedFileKey")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("FileStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<bool>("IsEncrypted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsShared")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Metadata")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("MimeType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ParentFolderId")
-                        .IsRequired()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentFolderId");
-
-                    b.ToTable("ThunderFile", (string)null);
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFileShare", b =>
-                {
-                    b.Property<Guid>("FileShareId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<byte[]>("EncryptedFileKeyForRecipient")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Permission")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("RecipientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("SharedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("FileShareId");
-
-                    b.HasIndex("FileId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.HasIndex("RecipientId");
-
-                    b.ToTable("ThunderFileShare", (string)null);
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFileTag", b =>
-                {
-                    b.Property<Guid>("FileTagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("FileTagId");
-
-                    b.HasIndex("FileId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ThunderFileTag", (string)null);
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFolder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsRootFolder")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ParentFolderId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ThunderFolder");
-                });
-
             modelBuilder.Entity("ThunderServer.Models.ThunderUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -479,82 +277,6 @@ namespace ThunderServer.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Shared.Models.FileInDirectory", b =>
-                {
-                    b.HasOne("Shared.Models.ThunderFolder", null)
-                        .WithMany()
-                        .HasForeignKey("DirectoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shared.Models.ThunderFile", null)
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shared.Models.Tag", b =>
-                {
-                    b.HasOne("ThunderServer.Models.ThunderUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFile", b =>
-                {
-                    b.HasOne("Shared.Models.ThunderFolder", "ParentFolder")
-                        .WithMany("Files")
-                        .HasForeignKey("ParentFolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ParentFolder");
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFileShare", b =>
-                {
-                    b.HasOne("Shared.Models.ThunderFile", null)
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ThunderServer.Models.ThunderUser", null)
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ThunderServer.Models.ThunderUser", null)
-                        .WithMany()
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFileTag", b =>
-                {
-                    b.HasOne("Shared.Models.ThunderFile", null)
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Shared.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Shared.Models.ThunderFolder", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }
