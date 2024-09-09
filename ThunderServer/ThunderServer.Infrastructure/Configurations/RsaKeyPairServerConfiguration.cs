@@ -14,7 +14,7 @@ class RsaKeyPairServerConfiguration : IEntityTypeConfiguration<RsaKeyPairServer>
 
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.PublicKey).HasConversion<byte[]>();
+        builder.Ignore(x => x.PublicKey);
 
         builder.Property(x => x.PrivateKey).HasConversion<byte[]>();
 
