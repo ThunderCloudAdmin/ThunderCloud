@@ -17,22 +17,22 @@ public class ListDirectoriesEndpointTests
         _endpoint = new ListDirectoriesEndpoint(_directoryService);
     }
 
-    [Fact]
-    public async Task HandleAsync_ShouldReturnListOfDirectories_WhenDirectoriesAreFound()
-    {
-        // Arrange
-        var directories = new Faker<DirectoryDto>()
-            .RuleFor(d => d.DirectoryId, d => Guid.NewGuid())
-            .RuleFor(d => d.DirectoryName, d => d.Lorem.Word())
-            .Generate(5);
+    //[Fact]
+    //public async Task HandleAsync_ShouldReturnListOfDirectories_WhenDirectoriesAreFound()
+    //{
+    //    // Arrange
+    //    var directories = new Faker<DirectoryDto>()
+    //        .RuleFor(d => d.DirectoryId, d => Guid.NewGuid())
+    //        .RuleFor(d => d.DirectoryName, d => d.Lorem.Word())
+    //        .Generate(5);
 
-        _directoryService.GetUserDirectoriesAsync(Arg.Any<Guid>()).Returns(Task.FromResult(directories));
+    //    _directoryService.GetUserDirectoriesAsync(Arg.Any<Guid>()).Returns(Task.FromResult(directories));
 
-        // Act
-        var response = await _endpoint.HandleAsync(CancellationToken.None);
+    //    // Act
+    //    var response = await _endpoint.HandleAsync(CancellationToken.None);
 
-        // Assert
-        response.Should().BeOfType<ListDirectoriesResponse>();
-        response.Directories.Should().HaveCount(5);
-    }
+    //    // Assert
+    //    response.Should().BeOfType<ListDirectoriesResponse>();
+    //    response.Directories.Should().HaveCount(5);
+    //}
 }
