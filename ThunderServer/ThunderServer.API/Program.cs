@@ -14,6 +14,8 @@ using Shared.Services.Configurations;
 using Shared.Services.Interfaces;
 using Shared.Services.Publishers;
 using Shared.Services.Publishers.Interfaces;
+using ThunderServer.API.Configurations;
+using ThunderServer.API.Extensions;
 using ThunderServer.API.Services;
 using ThunderServer.API.Services.Interfaces;
 using ThunderServer.Infrastructure;
@@ -42,7 +44,7 @@ builder.Services
    {
        o.DocumentSettings = s =>
        {
-           s.Title = "My API";
+           s.Title = "ThunderServer.API";
            s.Version = "v1";
        };
    })
@@ -56,7 +58,7 @@ builder.Services.AddDbContext<ThunderServerContext>(options =>
 });
 
 builder.Services
-    .AddIdentity<ThunderUser, IdentityRole>()
+    .AddIdentity<ThunderUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ThunderServerContext>()
     .AddDefaultTokenProviders();
 
@@ -142,7 +144,22 @@ app.UseAuthentication()
     .UseFastEndpoints()
    .UseSwaggerGen();
 
-app.MapIdentityApi<ThunderUser>();
+app.MapIdentityApiFilterable<ThunderUser>(new IdentityApiEndpointRouteBuilderOptions()
+{
+    ExcludeRegisterPost = true,
+    ExcludeLoginPost = false,
+    ExcludeRefreshPost = false,
+    ExcludeConfirmEmailGet = false,
+    ExcludeResendConfirmationEmailPost = false,
+    ExcludeForgotPasswordPost = false,
+    ExcludeResetPasswordPost = false,    
+    // setting ExcludeManageGroup to false will disable
+    // 2FA and both Info Actions
+    ExcludeManageGroup = false,
+    Exclude2faPost = false,
+    ExcludegInfoGet = false,
+    ExcludeInfoPost = true,
+});
 
 app.MapHealthChecks(
     "/health",
