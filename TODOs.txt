@@ -1,0 +1,8 @@
+CHECK THIS LINK TO DISABLE ONLY THE identity ENDPOINTS THAT NEED TO BE OVERRIDEN INSTEAD OF DISABLE ALL OF THEM
+How to disable ASP.NET Core Identity auto generated routes? --> https://darko-subic.medium.com/how-to-disable-asp-net-core-identity-auto-generated-routes-6dbd09b5e815
+
+Check also RegisterRequest under Server/Endpoints/Users folder
+
+2) create RSA keys during user registration, encrypt them and store them inside new tables
+
+3) Fix webapp because the connection to rabbit is broken (I think both cannot use same exhange binding etc or combo of them)

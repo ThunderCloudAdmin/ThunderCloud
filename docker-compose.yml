@@ -1,0 +1,88 @@
+services:
+  thunderserver.api:
+    image: ${DOCKER_REGISTRY-}thunderserverapi
+    build:
+      context: .
+      dockerfile: ThunderServer/ThunderServer.API/Dockerfile
+    depends_on:
+      - db
+      - rabbitmq
+    #volumes:
+    # https://docs.docker.com/desktop/wsl/best-practices/ as best practice for WSL use ~ that points to HOME folder inside WSL VM
+    #  - "~/testServer:/app/uploads:rw"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: true
+      STORAGE__ROOT: /app/uploads #USE DOUBLE UNDERSCORE TO "SIMULATE" : in the appsettings like sectionName:sectionProperty
+      RABBITMQ__USERNAME: "dev"
+      RABBITMQ__PASSWORD: "dev"
+      RABBITMQ__HOST: "rabbitmq"
+      RABBITMQ__VIRTUALHOST: "ThunderCloud"
+    ports:
+     - 8082:8082
+     - 8083:8083 #HTTPS
+
+  thunderclient.webapp:
+    image: ${DOCKER_REGISTRY-}thunderclientwebapp
+    build:
+      context: .
+      dockerfile: ThunderClient/ThunderClient.WebApp/Dockerfile
+    depends_on:
+      - thunderserver.api
+      - rabbitmq
+    # volumes:
+    #   - "~/testClient:/app/uploads:rw"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: true
+      STORAGE__ROOT: /app/uploads #USE DOUBLE UNDERSCORE TO "SIMULATE" : in the appsettings like sectionName:sectionProperty
+      RABBITMQ__USERNAME: "dev"
+      RABBITMQ__PASSWORD: "dev"
+      RABBITMQ__HOST: "rabbitmq"
+      RABBITMQ__VIRTUALHOST: "ThunderCloud"
+    ports:
+     - 8080:8080
+     - 8081:8081 #HTTPS  
+
+  db:
+    image: postgres:16
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_DB: ThunderCloudServer
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: test
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+
+  rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    restart: always
+    # set shared memory limit when using docker-compose    
+    ports:
+      - 5672:5672
+      - 15672:15672
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+        #Folder where users data, configuration etc is stored
+      # RABBITMQ_MNESIA_DIR: 
+      RABBITMQ_DEFAULT_USER: dev
+      RABBITMQ_DEFAULT_PASS: dev
+      RABBITMQ_DEFAULT_VHOST: ThunderCloud
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data 
+
+volumes:
+  pgdata: 
