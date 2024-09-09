@@ -15,6 +15,7 @@ public class ThunderServerContext : IdentityDbContext<ThunderUser, IdentityRole<
     public DbSet<FileInDirectory> FilesInDirectories { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ThunderFileTag> FileTags { get; set; }
+    public DbSet<RsaKeyPairServer> RsaKeyPairServers { get; set; }
 
     public ThunderServerContext(DbContextOptions<ThunderServerContext> options) : base(options)
     {
@@ -30,6 +31,7 @@ public class ThunderServerContext : IdentityDbContext<ThunderUser, IdentityRole<
         //.ApplyConfiguration(new ThunderFolderServerConfiguration())
         .ApplyConfiguration(new FileInDirectoryConfiguration())
         .ApplyConfiguration(new TagConfiguration())
-        .ApplyConfiguration(new ThunderFileTagConfiguration());
+        .ApplyConfiguration(new ThunderFileTagConfiguration())
+        .ApplyConfiguration(new RsaKeyPairServerConfiguration());
     }
 }
