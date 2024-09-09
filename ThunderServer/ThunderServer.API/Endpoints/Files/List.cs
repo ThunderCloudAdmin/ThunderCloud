@@ -18,7 +18,7 @@ public class List : Endpoint<ListFilesRequest, List<ThunderFile>>
 
 	public override void Configure()
 	{
-		Post($"/api/{nameof(ThunderFile)}/List");
+		Post($"/{nameof(ThunderFile)}/List");
 		AllowAnonymous();
 	}
 

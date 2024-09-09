@@ -5,7 +5,6 @@ using Shared.Models;
 using Shared.Services.Configurations;
 using Swashbuckle.AspNetCore.Annotations;
 using ThunderServer.API.Services.Interfaces;
-using ThunderServer.Models;
 using ProblemDetails = FastEndpoints.ProblemDetails;
 
 namespace ThunderServer.API.Endpoints.Files;
@@ -27,7 +26,7 @@ public class Create : Endpoint<FileUploadRequest, Results<Ok<FileUploadResponse>
 
     public override void Configure()
     {
-        Post($"/api/{nameof(ThunderFile)}/Create");
+        Post($"/{nameof(ThunderFile)}/Create");
         AllowAnonymous();
     }
 

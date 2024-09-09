@@ -19,7 +19,7 @@ public class Create : Endpoint<CreateFolderRequest>
 
 	public override void Configure()
 	{
-		Post($"/api/{nameof(ThunderFolder)}/Create");
+		Post($"/{nameof(ThunderFolder)}/Create");
 		AllowAnonymous();
 	}
 
