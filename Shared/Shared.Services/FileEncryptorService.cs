@@ -28,11 +28,11 @@ public class FileEncryptorService : IFileEncryptorService
         var encryptedFile = twoFishEncryptionService.Encrypt(dataToEncrypt, aesKey);
 
         //Retrieve user's public key
-        var rsaKeyPair = this.rSAKeyService.RetrievePublicKey();
+        var rsaKeyPair = this.rSAKeyService.GenerateRsaKeyPair();
 
         var rsa = rsaKeyPair.LoadPublicKeyAsRSA();
 
-        var encrypted2FishKey = this.rSAKeyService.EncryptAESKeyWithRSA(aesKey.Key, rsa);
+        var encrypted2FishKey = this.rSAKeyService.EncryptSymmetricKeyWithRSA(aesKey.Key, rsa);
 
         return new EncryptedBundle(encryptedFile, encrypted2FishKey);
     }
