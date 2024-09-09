@@ -6,17 +6,17 @@ namespace Shared.Services;
 
 public class RSAKeyService : IRSAKeyService
 {
-    public byte[] EncryptAESKeyWithRSA(byte[] aesKey, RSA recipientRsaPublicKey)
+    public byte[] EncryptSymmetricKeyWithRSA(byte[] aesKey, RSA recipientRsaPublicKey)
     {
         return recipientRsaPublicKey.Encrypt(aesKey, RSAEncryptionPadding.OaepSHA256);
     }
 
-    public byte[] DecryptAESKeyWithRSA(byte[] encryptedAesKey, RSA recipientRsaPrivateKey)
+    public byte[] DecryptSymmetricKeyWithRSA(byte[] encryptedAesKey, RSA recipientRsaPrivateKey)
     {
         return recipientRsaPrivateKey.Decrypt(encryptedAesKey, RSAEncryptionPadding.OaepSHA256);
     }
 
-    public RsaKeyPair RetrievePublicKey(int keySize = 4096)
+    public RsaKeyPair GenerateRsaKeyPair(int keySize = 4096)
     {
         using (RSA rsa = RSA.Create(keySize))
         {

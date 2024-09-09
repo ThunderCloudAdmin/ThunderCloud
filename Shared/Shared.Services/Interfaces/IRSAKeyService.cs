@@ -5,9 +5,9 @@ namespace Shared.Services.Interfaces;
 
 public interface IRSAKeyService
 {
-    byte[] EncryptAESKeyWithRSA(byte[] aesKey, RSA recipientRsaPublicKey);
+    byte[] EncryptSymmetricKeyWithRSA(byte[] aesKey, RSA recipientRsaPublicKey);
 
-    byte[] DecryptAESKeyWithRSA(byte[] encryptedAesKey, RSA recipientRsaPrivateKey);
+    byte[] DecryptSymmetricKeyWithRSA(byte[] encryptedAesKey, RSA recipientRsaPrivateKey);
 
-    RsaKeyPair RetrievePublicKey(int keySize = 4096);
+    RsaKeyPair GenerateRsaKeyPair(int keySize = 4096);
 }

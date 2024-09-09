@@ -8,7 +8,7 @@ public abstract class BaseEncryptionKey
 
     public byte[] Iv { get; private set; }
 
-    public BaseEncryptionKey(byte[] key, byte[] iv)
+    protected BaseEncryptionKey(byte[] key, byte[] iv)
     {
         Key = key;
         Iv = iv;
