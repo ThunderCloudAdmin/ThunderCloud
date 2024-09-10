@@ -15,9 +15,9 @@ public class RsaKeyEncryptionService : IRsaKeyEncryptionService
         this.rsaKeyPairServerRepository = rsaKeyPairServerRepository ?? throw new ArgumentNullException(nameof(rsaKeyPairServerRepository));
     }
 
-    public async Task EncryptPrivateKeyWithArgon2Key(byte[] argon2Key)
+    public async Task EncryptPrivateKeyWithArgon2Key(ThunderUser user, Argon2Key argon2Key)
     {
-        var rsaKeyPair = (RsaKeyPairServer)RsaKeyPairServer.GenerateRsaKeyPair();
+        var rsaKeyPair = RsaKeyPairServer.GenerateRsaKeyPair();
 
         var privateKey = Encoding.UTF8.GetBytes(rsaKeyPair.PrivateKey);
 
@@ -25,7 +25,7 @@ public class RsaKeyEncryptionService : IRsaKeyEncryptionService
 
         using (var aes = Aes.Create())
         {
-            aes.Key = argon2Key;
+            aes.Key = argon2Key.DerivedKey;
             aes.GenerateIV();  // Generate a new IV (Initialization Vector)
 
             using (var encryptor = aes.CreateEncryptor())
@@ -44,6 +44,8 @@ public class RsaKeyEncryptionService : IRsaKeyEncryptionService
         }
 
         rsaKeyPair.EncryptedPrivateRsaKey = encryptedPrivateKey;
+        rsaKeyPair.Argon2Key = argon2Key;
+        rsaKeyPair.User = user;
 
         await this.rsaKeyPairServerRepository.AddAsync(rsaKeyPair);
     }
