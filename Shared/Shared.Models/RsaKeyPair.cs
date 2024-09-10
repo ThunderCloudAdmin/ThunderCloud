@@ -67,18 +67,17 @@ public class RsaKeyPair
 
         return new RsaKeyPair(publicKey, privateKey);
     }
-    private static string ExportPrivateKey(RSA rsa)
+
+    public static string ExportPrivateKey(RSA rsa)
     {
         var privateKeyBytes = rsa.ExportRSAPrivateKey();
         return Convert.ToBase64String(privateKeyBytes);
     }
 
     // Export public key in PEM format
-    private static string ExportPublicKey(RSA rsa)
+    public static string ExportPublicKey(RSA rsa)
     {
         var publicKeyBytes = rsa.ExportSubjectPublicKeyInfo();
         return Convert.ToBase64String(publicKeyBytes);
     }
 }
-
-
