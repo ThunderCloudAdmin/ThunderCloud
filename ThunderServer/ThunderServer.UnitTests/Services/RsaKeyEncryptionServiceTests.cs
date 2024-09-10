@@ -20,12 +20,6 @@ public class RsaKeyEncryptionServiceTests
 
         // Instantiate the RsaKeyEncryptionService with the mock repository
         _rsaKeyEncryptionService = new RsaKeyEncryptionService(_mockRepository);
-
-        // Configure Bogus to generate fake RsaKeyPairServer
-        _rsaKeyPairFaker = new Faker<RsaKeyPairServer>()
-            .RuleFor(r => r.PrivateKey, f => Convert.ToBase64String(f.Random.Bytes(256)))  // Fake private key
-            .RuleFor(r => r.PublicKey, f => Convert.ToBase64String(f.Random.Bytes(256)))   // Fake public key
-            .RuleFor(r => r.EncryptedPrivateRsaKey, f => f.Random.Bytes(256));              // Fake encrypted private key
     }
 
     [Fact]
