@@ -8,12 +8,17 @@ namespace ThunderClient.WebApp.Services;
 public class FileWatcherService : IFileWatcherService
 {
     private readonly Dictionary<string, FileSystemWatcher> _watchers = new Dictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase); // Case-insensitive comparison
+    private readonly ILogger<FileWatcherService> _logger;
+
+    public FileWatcherService(ILogger<FileWatcherService> logger)
+    {
+        this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
     /// <summary>
     /// Adds a new file system watcher for the specified folder.
     /// </summary>
     /// <param name="folderPath">The absolute path of the folder to monitor.</param>
-    /// <exception cref="InvalidOperationException">
     /// Thrown if the folder is already being monitored, or if it is a child directory of an existing watcher.
     /// </exception>
     public void AddWatcher(string folderPath)
@@ -23,17 +28,17 @@ public class FileWatcherService : IFileWatcherService
         // Check if the folder is a child or parent of an existing watcher
         if (HandleParentChildConflict(folderPath))
         {
-            Console.WriteLine($"Watcher for {folderPath} has been added, and necessary adjustments were made.");
+            _logger.LogDebug("Watcher for {folderPath} has been added, and necessary adjustments were made.", folderPath);
             return;
         }
 
         if (_watchers.ContainsKey(folderPath))
         {
-            throw new InvalidOperationException($"Folder {folderPath} is already being monitored.");
+            _logger.LogError("Folder {folderPath} is already being monitored.", folderPath);
         }
 
         CreateAndStartWatcher(folderPath);
-    }    
+    }
 
     /// <summary>
     /// Removes the file system watcher for the specified folder.
@@ -80,7 +85,7 @@ public class FileWatcherService : IFileWatcherService
             else if (IsParentDirectory(existingFolderPath, newFolderPath))
             {
                 // New folder is a child of an existing folder, reject the new watcher
-                throw new InvalidOperationException($"Cannot monitor {newFolderPath} as it is a child directory of an existing watcher.");
+                _logger.LogError("Cannot monitor {newFolderPath} as it is a child directory of an existing watcher.", newFolderPath);
             }
         }
 
@@ -147,7 +152,7 @@ public class FileWatcherService : IFileWatcherService
     private void OnChanged(object sender, FileSystemEventArgs e)
     {
         // Handle file created/changed/deleted event
-        Console.WriteLine($"File {e.ChangeType}: {e.FullPath}");
+        _logger.LogDebug("File {changeType}: {fullPath}", e.ChangeType, e.FullPath);
     }
 
     /// <summary>
@@ -158,7 +163,7 @@ public class FileWatcherService : IFileWatcherService
     private void OnRenamed(object sender, RenamedEventArgs e)
     {
         // Handle renamed event
-        Console.WriteLine($"File renamed from {e.OldFullPath} to {e.FullPath}");
+         _logger.LogDebug("File renamed from {oldFullPath} to {fullPath}", e.OldFullPath, e.FullPath);
     }
 
     /// <summary>
@@ -169,7 +174,7 @@ public class FileWatcherService : IFileWatcherService
         foreach (var watcher in _watchers.Values)
         {
             watcher.Dispose();
-             GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         _watchers.Clear();
