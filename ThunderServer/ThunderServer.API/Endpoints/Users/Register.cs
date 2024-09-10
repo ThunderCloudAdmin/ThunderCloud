@@ -22,8 +22,18 @@ public class Register : Endpoint<RegisterRequest, Results<Ok, ValidationProblem>
     private readonly IEmailSender<ThunderUser> emailSender;
     private readonly IHttpContextAccessor httpContext;
     private readonly LinkGenerator linkGenerator;
+    private readonly IRsaKeyEncryptionService rsaKeyEncryptionService;
 
-    public Register(IThunderFileService thunderFileService, ILogger<Register> logger, UserManager<ThunderUser> userManager, IUserStore<ThunderUser> userStore, IEmailSender<ThunderUser> emailSender, IHttpContextAccessor httpContext, LinkGenerator linkGenerator)
+    public Register(
+        IThunderFileService thunderFileService,
+        ILogger<Register> logger,
+        UserManager<ThunderUser> userManager,
+        IUserStore<ThunderUser> userStore,
+        IEmailSender<ThunderUser> emailSender,
+        IHttpContextAccessor httpContext,
+        LinkGenerator linkGenerator,
+        IRsaKeyEncryptionService rsaKeyEncryptionService
+        )
     {
         _thunderFileService = thunderFileService ?? throw new ArgumentNullException(nameof(thunderFileService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -32,12 +42,13 @@ public class Register : Endpoint<RegisterRequest, Results<Ok, ValidationProblem>
         this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         this.httpContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
         this.linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
+        this.rsaKeyEncryptionService = rsaKeyEncryptionService ?? throw new ArgumentNullException(nameof(rsaKeyEncryptionService));;
     }
 
     public override void Configure()
     {
         Post("/thunderuser/register");
-        AllowAnonymous();        
+        AllowAnonymous();
         Tags($"{nameof(ThunderUser)}");
     }
 
@@ -64,6 +75,11 @@ public class Register : Endpoint<RegisterRequest, Results<Ok, ValidationProblem>
         {
             return CreateValidationProblem(result);
         }
+
+        var argonKey = Argon2Key.DeriveKeyFromPassword(registration.Password);        
+
+        //IMPLEMENT FROM HERE
+        await this.rsaKeyEncryptionService.EncryptPrivateKeyWithArgon2Key(user, argonKey);
 
         //await SendConfirmationEmailAsync(user, email);
 
