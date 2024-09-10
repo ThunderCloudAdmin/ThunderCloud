@@ -15,13 +15,16 @@ class RsaKeyPairServerConfiguration : IEntityTypeConfiguration<RsaKeyPairServer>
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Ignore(x => x.PublicKey);
+        builder.Ignore(x => x.PrivateKey);
 
-        builder.Property(x => x.PrivateKey).HasConversion<byte[]>();
-
-        builder.Property(x => x.Salt);
+        builder.Property(x => x.EncryptedPrivateRsaKey);
 
         builder.HasOne(x => x.User)
             .WithOne(x => x.RsaKeyPairServer)
             .HasForeignKey<RsaKeyPairServer>(x => x.UserId);
+
+        builder.HasOne(x => x.Argon2Key)
+            .WithOne(x => x.RsaKeyPairServer)
+            .HasForeignKey<RsaKeyPairServer>(x => x.Id);
     }
 }

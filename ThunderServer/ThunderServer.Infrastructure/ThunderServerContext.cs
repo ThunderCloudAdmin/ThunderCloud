@@ -16,10 +16,10 @@ public class ThunderServerContext : IdentityDbContext<ThunderUser, IdentityRole<
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ThunderFileTag> FileTags { get; set; }
     public DbSet<RsaKeyPairServer> RsaKeyPairServers { get; set; }
+    public DbSet<Argon2Key> Argon2Keys { get; set; }
 
-    public ThunderServerContext(DbContextOptions<ThunderServerContext> options) : base(options)
-    {
-    }
+    public ThunderServerContext(DbContextOptions<ThunderServerContext> options) : base(options) { }
+    public ThunderServerContext() : base() { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +32,7 @@ public class ThunderServerContext : IdentityDbContext<ThunderUser, IdentityRole<
         .ApplyConfiguration(new FileInDirectoryConfiguration())
         .ApplyConfiguration(new TagConfiguration())
         .ApplyConfiguration(new ThunderFileTagConfiguration())
-        .ApplyConfiguration(new RsaKeyPairServerConfiguration());
+        .ApplyConfiguration(new RsaKeyPairServerConfiguration())
+        .ApplyConfiguration(new Argon2KeyConfiguration());
     }
 }
