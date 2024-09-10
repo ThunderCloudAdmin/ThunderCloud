@@ -28,7 +28,7 @@ public class FileEncryptorService : IFileEncryptorService
         var encryptedFile = twoFishEncryptionService.Encrypt(dataToEncrypt, aesKey);
 
         //Retrieve user's public key
-        var rsaKeyPair = this.rSAKeyService.GenerateRsaKeyPair();
+        var rsaKeyPair = RsaKeyPair.GenerateRsaKeyPair();
 
         var rsa = rsaKeyPair.LoadPublicKeyAsRSA();
 
