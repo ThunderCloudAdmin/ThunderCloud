@@ -1,20 +1,17 @@
-using FastEndpoints;
-using FastEndpoints.Security;
-using FastEndpoints.Swagger;
 using HealthChecks.UI.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Shared.Models;
 using Shared.Services;
-using Shared.Services.BackgroundServices;
 using Shared.Services.Configurations;
 using Shared.Services.Interfaces;
 using Shared.Services.Publishers;
 using Shared.Services.Publishers.Interfaces;
 using ThunderClient.WebApp.Components;
+using ThunderClient.WebApp.Services;
+using ThunderClient.WebApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,10 +100,12 @@ builder.Services.AddSingleton<IAesEncryptionService, AesEncryptionService>();
 builder.Services.AddSingleton<IFileEncryptorService, FileEncryptorService>();
 builder.Services.AddSingleton<IFileUploadService, FileUploadService>();
 
+builder.Services.AddSingleton<IFileWatcherService, FileWatcherService>();
+
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
-builder.Services.AddHostedService<FilesMonitorWithWatcher>();
+builder.Services.AddHostedService<FileWatcherBackgroundService>();
 
 builder.Services.AddBlazorBootstrap();
 
