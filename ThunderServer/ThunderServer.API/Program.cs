@@ -116,8 +116,6 @@ builder.Services
         tags: ["ready"]);
 
 builder.Services.AddScoped<IThunderFileService, ThunderFileService>();
-builder.Services.AddScoped<IThunderFileRepository, ThunderFileRepository>();
-
 builder.Services.AddSingleton<IEmailSender<ThunderUser>, EmailSender>();
 
 builder.Services.AddSingleton<IRSAKeyService, RSAKeyService>();
@@ -128,6 +126,11 @@ builder.Services.AddSingleton<ITwoFishEncryptionService, TwoFishEncryptionServic
 builder.Services.AddSingleton<IAesEncryptionService, AesEncryptionService>();
 builder.Services.AddSingleton<IFileEncryptorService, FileEncryptorService>();
 builder.Services.AddSingleton<IFileUploadService, FileUploadService>();
+
+builder.Services.AddScoped<IRsaKeyEncryptionService, RsaKeyEncryptionService>();
+
+builder.Services.AddScoped<IThunderFileRepository, ThunderFileRepository>();
+builder.Services.AddScoped<IRsaKeyPairServerRepository, RsaKeyPairServerRepository>();
 
 //builder.Services.AddSingleton<IBackgroundTaskQueue, FileToUpdateTaskQueue>();
 
@@ -152,7 +155,7 @@ app.MapIdentityApiFilterable<ThunderUser>(new IdentityApiEndpointRouteBuilderOpt
     ExcludeConfirmEmailGet = false,
     ExcludeResendConfirmationEmailPost = false,
     ExcludeForgotPasswordPost = false,
-    ExcludeResetPasswordPost = false,    
+    ExcludeResetPasswordPost = false,
     // setting ExcludeManageGroup to false will disable
     // 2FA and both Info Actions
     ExcludeManageGroup = false,
