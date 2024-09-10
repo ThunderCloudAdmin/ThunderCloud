@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Shared.Models;
 using Shared.Services;
-using Shared.Services.BackgroundServices;
 using Shared.Services.Configurations;
 using Shared.Services.Interfaces;
 using Shared.Services.Publishers;
@@ -131,14 +130,12 @@ builder.Services.AddScoped<IRsaKeyEncryptionService, RsaKeyEncryptionService>();
 
 builder.Services.AddScoped<IThunderFileRepository, ThunderFileRepository>();
 builder.Services.AddScoped<IRsaKeyPairServerRepository, RsaKeyPairServerRepository>();
+builder.Services.AddScoped<IArgon2KeyRepository, Argon2KeyRepository>();
 
 //builder.Services.AddSingleton<IBackgroundTaskQueue, FileToUpdateTaskQueue>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
-
-builder.Services.AddHostedService<FilesMonitorWithWatcher>();
-//builder.Services.AddHostedService<FilesMonitorWithProvider>();
 
 var app = builder.Build();
 
