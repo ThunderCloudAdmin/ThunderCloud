@@ -31,7 +31,9 @@ templates_path = ['_templates']
 html_theme = 'renku'
 html_theme_options = {
     'logo_only': True,
-    'display_version': False
+    'display_version': False,
+    'description': 'A cloud storage solution but... self-hosted',
+    'github_repo': 'https://github.com/ThunderCloudAdmin/ThunderCloud'
 }
 #html_logo = 'img/logo.png'
 
