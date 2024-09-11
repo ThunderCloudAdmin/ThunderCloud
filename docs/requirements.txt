@@ -1,3 +1,4 @@
 myst_parser
 sphinx
 cloud
+sphinx_rtd_theme
