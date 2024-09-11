@@ -5,7 +5,7 @@
 project = 'Thundercloud'
 copyright = '2024, Zenkraker'
 author = 'Zenkraker'
-release = 0.0.1
+release = '0.0.1'
 
 # -- General configuration
 
