@@ -1,4 +1,4 @@
 sphinx==8.0.2
 sphinx-rtd-theme==3.0.0rc1
 myst_parser==4.0.0
-renku-sphinx-theme=0.3.0
+renku-sphinx-theme==0.3.0
