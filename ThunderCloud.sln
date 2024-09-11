@@ -35,9 +35,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.UnitTests", "Shared\
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{64B9A17D-C8EA-4B8B-B7C0-A2B1C7E657DA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{596A70B1-B220-4AA2-9801-3D7EC17D741C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{596A70B1-B220-4AA2-9801-3D7EC17D741C}"
 	ProjectSection(SolutionItems) = preProject
-		Docs\flows.txt = Docs\flows.txt
+		CurrentFeatures.md = CurrentFeatures.md
+		docs\flows.txt = docs\flows.txt
 		TODOs.txt = TODOs.txt
 	EndProjectSection
 EndProject
