@@ -10,9 +10,9 @@ release = '0.0.1'
 # -- General configuration
 
 extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
+    #'sphinx.ext.duration',
+    #'sphinx.ext.doctest',
+    #'sphinx.ext.autodoc',
     'myst_parser',
     'sphinx.ext.githubpages',  # Create GitHub Pages-compatible output
 ]
