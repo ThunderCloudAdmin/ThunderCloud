@@ -37,7 +37,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{596A70B1-B220-4AA2-9801-3D7EC17D741C}"
 	ProjectSection(SolutionItems) = preProject
-		CurrentFeatures.md = CurrentFeatures.md
+		docs\CurrentFeatures.md = docs\CurrentFeatures.md
 		docs\flows.txt = docs\flows.txt
 		TODOs.txt = TODOs.txt
 	EndProjectSection
