@@ -28,7 +28,7 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 
-html_theme = 'renku'
+html_theme = 'cloud'
 html_theme_options = {
     'logo_only': True,
     'display_version': False,
